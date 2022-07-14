@@ -31,16 +31,25 @@ namespace GunChargePatch.Patches
         [HarmonyPriority(Priority.Last)]
         static void ResetCharge(Gun __instance, float charge, bool __result)
         {
-            UnityEngine.Debug.Log($"Gun told to attack with a charge of {string.Format("{0:F2}", charge)}");
+            UnityEngine.Debug.Log($"Gun.Attack called with a charge of {string.Format("{0:F2}.", charge)}");
 
             if (__result)
             {
                 __instance.currentCharge = 0f;
             }
         }
+
+        [HarmonyPostfix]
+        [HarmonyPatch("DoAttack")]
+        [HarmonyPriority(Priority.Last)]
+        static void CheckCharge(Gun __instance, float charge)
+        {
+            UnityEngine.Debug.Log($"DoAttack has charge of {string.Format("{0:F2}", charge)}.");
+
+        }
     }
 
-    [HarmonyPatch(typeof(Gun))]
+    [HarmonyPatch]
     class Gun_Patch
     {
         static Type GetNestedIDoBlockTransitionType()
@@ -74,6 +83,8 @@ namespace GunChargePatch.Patches
             List<CodeInstruction> codes = new List<CodeInstruction>(instructions);
 
             OriginalFireBurstCode = codes.ToArray();
+
+            UnityEngine.Debug.Log("Running Gun transpiler");
 
             //for (var i = 0; i < codes.Count; i++)
             //{
@@ -156,10 +167,10 @@ namespace GunChargePatch.Patches
 
             NewFireBurstCode = codes.ToArray();
 
-            for (int i = 0; i < codes.Count; i++)
-            {
-                UnityEngine.Debug.Log($"{i}: {codes[i].opcode}, {codes[i].operand}");
-            }
+            //for (int i = 0; i < codes.Count; i++)
+            //{
+            //    UnityEngine.Debug.Log($"{i}: {codes[i].opcode}, {codes[i].operand}");
+            //}
 
             return codes.AsEnumerable();
         }
