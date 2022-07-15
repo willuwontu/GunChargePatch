@@ -6,8 +6,9 @@ using GunChargePatch.Extensions;
 
 namespace GunChargePatch
 {
-    // Declares our mod to Bepin
-    [BepInPlugin(ModId, ModName, Version)]
+	[BepInDependency("pykess.rounds.plugins.moddingutils", BepInDependency.DependencyFlags.SoftDependency)]
+	// Declares our mod to Bepin
+	[BepInPlugin(ModId, ModName, Version)]
     // The game our mod is associated with
     [BepInProcess("Rounds.exe")]
     public class GunChargePatch : BaseUnityPlugin
@@ -40,14 +41,14 @@ namespace GunChargePatch
 		{
 			UnityEngine.Debug.Log(string.Format("Charge of {0:F2} passed on to bullet.", charge));
 			this.gameObject.GetComponent<ProjectileHit>().GetAdditionalData().charge = charge;
-			PlayerManager.instance.GetPlayerWithActorID(senderID).data.weaponHandler.gun.BulletInit(this.gameObject, nrOfProj, dmgM, randomSeed, true);
+			this.gameObject.GetComponent<ProjectileInit>().InvokeMethod("RPCA_Init", new object[] { senderID, nrOfProj, dmgM, randomSeed });
 		}
 
 		internal void OFFLINE_InitCharge(int senderID, int nrOfProj, float dmgM, float randomSeed, float charge)
 		{
 			UnityEngine.Debug.Log(string.Format("Charge of {0:F2} passed on to bullet.", charge));
 			this.gameObject.GetComponent<ProjectileHit>().GetAdditionalData().charge = charge;
-			PlayerManager.instance.players[senderID].data.weaponHandler.gun.BulletInit(this.gameObject, nrOfProj, dmgM, randomSeed, true);
+			this.gameObject.GetComponent<ProjectileInit>().InvokeMethod("OFFLINE_Init", new object[] { senderID, nrOfProj, dmgM, randomSeed });
 		}
 
 		[PunRPC]
@@ -55,14 +56,14 @@ namespace GunChargePatch
 		{
 			UnityEngine.Debug.Log(string.Format("Charge of {0:F2} passed on to bullet.", charge));
 			this.gameObject.GetComponent<ProjectileHit>().GetAdditionalData().charge = charge;
-			this.GetChildGunWithID(gunID, PlayerManager.instance.GetPlayerWithActorID(senderID).gameObject).BulletInit(this.gameObject, nrOfProj, dmgM, randomSeed, true);
+			this.gameObject.GetComponent<ProjectileInit>().InvokeMethod("RPCA_Init_SeparateGun", new object[] { senderID, gunID, nrOfProj, dmgM, randomSeed });
 		}
 
 		internal void OFFLINE_Init_SeparateGunCharge(int senderID, int gunID, int nrOfProj, float dmgM, float randomSeed, float charge)
 		{
 			UnityEngine.Debug.Log(string.Format("Charge of {0:F2} passed on to bullet.", charge));
 			this.gameObject.GetComponent<ProjectileHit>().GetAdditionalData().charge = charge;
-			this.GetChildGunWithID(gunID, PlayerManager.instance.players[senderID].gameObject).BulletInit(this.gameObject, nrOfProj, dmgM, randomSeed, true);
+			this.gameObject.GetComponent<ProjectileInit>().InvokeMethod("OFFLINE_Init_SeparateGun", new object[] { senderID, gunID, nrOfProj, dmgM, randomSeed });
 		}
 
 		private Gun GetChildGunWithID(int id, GameObject player)
@@ -74,19 +75,29 @@ namespace GunChargePatch
 			return this.guns[id];
 		}
 
+		private static Player GetPlayerWithActorAndPlayerIDs(int actorID, int playerID)
+		{
+			Player res = null;
+			foreach (Player player in PlayerManager.instance.players)
+			{
+				if (player.data.view.ControllerActorNr == actorID && player.playerID == playerID) { res = player; break; }
+			}
+			return res;
+		}
+
 		[PunRPC]
 		internal void RPCA_Init_noAmmoUseCharge(int senderID, int nrOfProj, float dmgM, float randomSeed, float charge)
 		{
 			UnityEngine.Debug.Log(string.Format("Charge of {0:F2} passed on to bullet.", charge));
 			this.gameObject.GetComponent<ProjectileHit>().GetAdditionalData().charge = charge;
-			PlayerManager.instance.GetPlayerWithActorID(senderID).data.weaponHandler.gun.BulletInit(this.gameObject, nrOfProj, dmgM, randomSeed, false);
+			this.gameObject.GetComponent<ProjectileInit>().InvokeMethod("RPCA_Init_noAmmoUse", new object[] { senderID, nrOfProj, dmgM, randomSeed });
 		}
 
 		internal void OFFLINE_Init_noAmmoUseCharge(int senderID, int nrOfProj, float dmgM, float randomSeed, float charge)
 		{
 			UnityEngine.Debug.Log(string.Format("Charge of {0:F2} passed on to bullet.", charge));
 			this.gameObject.GetComponent<ProjectileHit>().GetAdditionalData().charge = charge;
-			PlayerManager.instance.players[senderID].data.weaponHandler.gun.BulletInit(this.gameObject, nrOfProj, dmgM, randomSeed, false);
+			this.gameObject.GetComponent<ProjectileInit>().InvokeMethod("OFFLINE_Init_noAmmoUse", new object[] { senderID, nrOfProj, dmgM, randomSeed });
 		}
 
 		private Gun[] guns;
