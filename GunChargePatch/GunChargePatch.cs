@@ -6,7 +6,6 @@ using GunChargePatch.Extensions;
 
 namespace GunChargePatch
 {
-	[BepInDependency("pykess.rounds.plugins.moddingutils", BepInDependency.DependencyFlags.SoftDependency)]
 	// Declares our mod to Bepin
 	[BepInPlugin(ModId, ModName, Version)]
     // The game our mod is associated with
