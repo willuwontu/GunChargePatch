@@ -25,12 +25,17 @@ namespace GunChargePatch
             // Use this to call any harmony patch files your mod may have
             var harmony = new Harmony(ModId);
             harmony.PatchAll();
-        }
+			GameObject bullet = Resources.Load<GameObject>("Bullet_Base");
+			bullet.AddComponent<ChargedProjectileInit>();
+		}
         void Start()
         {
-            GameObject bullet = Resources.Load<GameObject>("Bullet_Base");
-            bullet.AddComponent<ChargedProjectileInit>();
-        }
+			GameObject bullet = Resources.Load<GameObject>("Bullet_Base");
+			if (!bullet.GetComponent<ChargedProjectileInit>())
+            {
+				bullet.AddComponent<ChargedProjectileInit>();
+			}
+		}
     }
 
 	public class ChargedProjectileInit : MonoBehaviour

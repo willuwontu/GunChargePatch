@@ -10,23 +10,36 @@ using HarmonyLib;
 
 namespace GunChargePatch.Patches
 {
-    
-
-    [HarmonyPatch(typeof(Gun), "ResetStats")]
-    class GunPatchResetStats
+    [HarmonyPatch(typeof(Gun))]
+    class GunPatchDefaultStats
     {
-        private static void Prefix(Gun __instance)
+        [HarmonyPostfix]
+        [HarmonyPatch("ResetStats")]
+        private static void SetOnReset(Gun __instance)
         {
             __instance.chargeDamageMultiplier = 1f;
             __instance.chargeEvenSpreadTo = 0f;
             __instance.chargeRecoilTo = 0f;
-            __instance.chargeSpeedTo = 0f;
+            __instance.chargeSpeedTo = 1f;
+            __instance.chargeSpreadTo = 0f;
+        }
+
+        [HarmonyPatch(typeof(Gun))]
+        [HarmonyPatch(MethodType.Constructor)]
+        [HarmonyPatch(new Type[] { })]
+        [HarmonyPostfix]
+        private static void SetOnCreate(Gun __instance)
+        {
+            __instance.chargeDamageMultiplier = 1f;
+            __instance.chargeEvenSpreadTo = 0f;
+            __instance.chargeRecoilTo = 0f;
+            __instance.chargeSpeedTo = 1f;
             __instance.chargeSpreadTo = 0f;
         }
     }
 
     [HarmonyPatch(typeof(Gun))]
-    class Gun_Patch2
+    class Gun_Patch
     {
         [HarmonyPostfix]
         [HarmonyPatch(nameof(Gun.Attack))]
@@ -38,10 +51,39 @@ namespace GunChargePatch.Patches
                 __instance.currentCharge = 0f;
             }
         }
+
+        [HarmonyPrefix]
+        [HarmonyPatch("ApplyProjectileStats")]
+        [HarmonyPriority(Priority.First)]
+        static void AdjustBulletSpeed(Gun __instance, GameObject obj)
+        {
+            if (!__instance.useCharge)
+            {
+                return;
+            }
+
+            ProjectileHit bullet = obj.GetComponent<ProjectileHit>();
+            MoveTransform move = obj.GetComponent<MoveTransform>();
+
+            float charge = Extensions.ProjectileHitExtensions.GetAdditionalData(bullet).charge;
+
+            move.localForce *= charge * __instance.chargeSpeedTo;
+            bullet.damage *= charge * __instance.chargeDamageMultiplier;
+        }
+
+        [HarmonyPatch("usedCooldown", MethodType.Getter)]
+        [HarmonyPostfix]
+        static void ChargeWeaponCD(Gun __instance, ref float __result)
+        {
+            if (__instance.useCharge)
+            {
+                __result = 0.1f;
+            }
+        }
     }
 
     [HarmonyPatch]
-    class Gun_Patch
+    class Gun_PatchTranspiler
     {
         static Type GetNestedIDoBlockTransitionType()
         {
@@ -277,7 +319,5 @@ namespace GunChargePatch.Patches
 
             return codes.AsEnumerable();
         }
-
-
     }
 }

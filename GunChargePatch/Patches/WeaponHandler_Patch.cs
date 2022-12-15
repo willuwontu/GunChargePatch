@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using Photon.Pun;
 using UnityEngine;
+using GunChargePatch.Extensions;
 using HarmonyLib;
 
 namespace GunChargePatch.Patches
@@ -49,6 +50,38 @@ namespace GunChargePatch.Patches
             //}
 
             return codes.AsEnumerable();
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch("Attack")]
+        static void DefaultChargingMethod(WeaponHandler __instance, CharacterData ___data)
+        {
+            if (!__instance)
+            {
+                return;
+            }
+
+            if (!___data)
+            {
+                return;
+            }
+
+            if (!__instance.gun)
+            {
+                return;
+            }
+
+            if (!__instance.gun.useCharge)
+            {
+                return;
+            }
+
+            if (___data.input.shootIsPressed && !___data.dead && (bool)(typeof(PlayerVelocity).GetField("simulated", BindingFlags.Instance | BindingFlags.GetField |
+                        BindingFlags.NonPublic).GetValue(___data.playerVel)) && (0 < (int)typeof(GunAmmo).GetField("currentAmmo", BindingFlags.Instance | BindingFlags.GetField |
+                        BindingFlags.NonPublic).GetValue(__instance.gun.GetComponentInChildren<GunAmmo>())))
+            {
+                __instance.gun.currentCharge = Mathf.Clamp(__instance.gun.currentCharge + ((TimeHandler.deltaTime / __instance.gun.GetAdditionalData().chargeTime) * __instance.gun.GetAdditionalData().maxCharge), 0f, __instance.gun.GetAdditionalData().maxCharge);
+            }
         }
     }
 }
