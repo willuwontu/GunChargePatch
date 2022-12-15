@@ -6,6 +6,8 @@ using GunChargePatch.Extensions;
 
 namespace GunChargePatch
 {
+	[BepInDependency("pykess.rounds.plugins.moddingutils", BepInDependency.DependencyFlags.SoftDependency)]
+	[BepInDependency("io.olavim.rounds.rwf", BepInDependency.DependencyFlags.SoftDependency)]
 	// Declares our mod to Bepin
 	[BepInPlugin(ModId, ModName, Version)]
     // The game our mod is associated with
@@ -45,20 +47,20 @@ namespace GunChargePatch
 		{
 			//UnityEngine.Debug.Log(string.Format("Charge of {0:F2} passed on to bullet.", charge));
 			this.gameObject.GetComponent<ProjectileHit>().GetAdditionalData().charge = charge;
-			UnityEngine.Debug.Log($"SenderID: {senderID}");
-			UnityEngine.Debug.Log($"nrOfProj: {nrOfProj}");
-			UnityEngine.Debug.Log($"dmgM: {dmgM}");
-			UnityEngine.Debug.Log($"randomSeed: {randomSeed}");
-			UnityEngine.Debug.Log($"Charge: {randomSeed}");
-			UnityEngine.Debug.Log($"{this.gameObject.GetComponent<ProjectileInit>()}");
-			UnityEngine.Debug.Log($"Owner ID: {this.gameObject.GetComponent<PhotonView>().OwnerActorNr}");
-			if (this.gameObject.GetComponent<PhotonView>().IsMine)
-            {
-				this.gameObject.GetComponent<PhotonView>().RPC("RPCA_Init", RpcTarget.All, new object[] { senderID, nrOfProj, dmgM, randomSeed });
+			//UnityEngine.Debug.Log($"SenderID: {senderID}");
+			//UnityEngine.Debug.Log($"nrOfProj: {nrOfProj}");
+			//UnityEngine.Debug.Log($"dmgM: {dmgM}");
+			//UnityEngine.Debug.Log($"randomSeed: {randomSeed}");
+			//UnityEngine.Debug.Log($"Charge: {randomSeed}");
+			//UnityEngine.Debug.Log($"{this.gameObject.GetComponent<ProjectileInit>()}");
+			//UnityEngine.Debug.Log($"Owner ID: {this.gameObject.GetComponent<PhotonView>().OwnerActorNr}");
+			//if (this.gameObject.GetComponent<PhotonView>().IsMine)
+   //         {
+			//	this.gameObject.GetComponent<PhotonView>().RPC("RPCA_Init", RpcTarget.All, new object[] { senderID, nrOfProj, dmgM, randomSeed });
 
-			}
+			//}
 			//typeof(ProjectileInit).GetMethod("RPCA_Init", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Default | System.Reflection.BindingFlags.InvokeMethod | System.Reflection.BindingFlags.Instance).Invoke(this.gameObject.GetComponent<ProjectileInit>(), new object[] { senderID, nrOfProj, dmgM, randomSeed });
-			//this.gameObject.GetComponent<ProjectileInit>().InvokeMethod("RPCA_Init", new object[] { senderID, nrOfProj, dmgM, randomSeed });
+			this.gameObject.GetComponent<ProjectileInit>().InvokeMethod("RPCA_Init", new object[] { senderID, nrOfProj, dmgM, randomSeed });
 		}
 
 		internal void OFFLINE_InitCharge(int senderID, int nrOfProj, float dmgM, float randomSeed, float charge)
@@ -79,13 +81,13 @@ namespace GunChargePatch
 		{
 			//UnityEngine.Debug.Log(string.Format("Charge of {0:F2} passed on to bullet.", charge));
 			this.gameObject.GetComponent<ProjectileHit>().GetAdditionalData().charge = charge;
-			UnityEngine.Debug.Log($"SenderID: {senderID}");
-			UnityEngine.Debug.Log($"GunID: {gunID}");
-			UnityEngine.Debug.Log($"nrOfProj: {nrOfProj}");
-			UnityEngine.Debug.Log($"dmgM: {dmgM}");
-			UnityEngine.Debug.Log($"randomSeed: {randomSeed}");
-			UnityEngine.Debug.Log($"Charge: {randomSeed}");
-			UnityEngine.Debug.Log($"{this.gameObject.GetComponent<ProjectileInit>()}");
+			//UnityEngine.Debug.Log($"SenderID: {senderID}");
+			//UnityEngine.Debug.Log($"GunID: {gunID}");
+			//UnityEngine.Debug.Log($"nrOfProj: {nrOfProj}");
+			//UnityEngine.Debug.Log($"dmgM: {dmgM}");
+			//UnityEngine.Debug.Log($"randomSeed: {randomSeed}");
+			//UnityEngine.Debug.Log($"Charge: {randomSeed}");
+			//UnityEngine.Debug.Log($"{this.gameObject.GetComponent<ProjectileInit>()}");
 			this.gameObject.GetComponent<ProjectileInit>().InvokeMethod("RPCA_Init_SeparateGun", new object[] { senderID, gunID, nrOfProj, dmgM, randomSeed });
 		}
 
@@ -127,12 +129,12 @@ namespace GunChargePatch
 		{
 			//UnityEngine.Debug.Log(string.Format("Charge of {0:F2} passed on to bullet.", charge));
 			this.gameObject.GetComponent<ProjectileHit>().GetAdditionalData().charge = charge;
-			UnityEngine.Debug.Log($"SenderID: {senderID}");
-			UnityEngine.Debug.Log($"nrOfProj: {nrOfProj}");
-			UnityEngine.Debug.Log($"dmgM: {dmgM}");
-			UnityEngine.Debug.Log($"randomSeed: {randomSeed}");
-			UnityEngine.Debug.Log($"Charge: {randomSeed}");
-			UnityEngine.Debug.Log($"{this.gameObject.GetComponent<ProjectileInit>()}");
+			//UnityEngine.Debug.Log($"SenderID: {senderID}");
+			//UnityEngine.Debug.Log($"nrOfProj: {nrOfProj}");
+			//UnityEngine.Debug.Log($"dmgM: {dmgM}");
+			//UnityEngine.Debug.Log($"randomSeed: {randomSeed}");
+			//UnityEngine.Debug.Log($"Charge: {randomSeed}");
+			//UnityEngine.Debug.Log($"{this.gameObject.GetComponent<ProjectileInit>()}");
 			this.gameObject.GetComponent<ProjectileInit>().InvokeMethod("RPCA_Init_noAmmoUse", new object[] { senderID, nrOfProj, dmgM, randomSeed });
 		}
 
@@ -140,12 +142,12 @@ namespace GunChargePatch
 		{
 			//UnityEngine.Debug.Log(string.Format("Charge of {0:F2} passed on to bullet.", charge));
 			this.gameObject.GetComponent<ProjectileHit>().GetAdditionalData().charge = charge;
-			UnityEngine.Debug.Log($"SenderID: {senderID}");
-			UnityEngine.Debug.Log($"nrOfProj: {nrOfProj}");
-			UnityEngine.Debug.Log($"dmgM: {dmgM}");
-			UnityEngine.Debug.Log($"randomSeed: {randomSeed}");
-			UnityEngine.Debug.Log($"Charge: {randomSeed}");
-			UnityEngine.Debug.Log($"{this.gameObject.GetComponent<ProjectileInit>()}");
+			//UnityEngine.Debug.Log($"SenderID: {senderID}");
+			//UnityEngine.Debug.Log($"nrOfProj: {nrOfProj}");
+			//UnityEngine.Debug.Log($"dmgM: {dmgM}");
+			//UnityEngine.Debug.Log($"randomSeed: {randomSeed}");
+			//UnityEngine.Debug.Log($"Charge: {randomSeed}");
+			//UnityEngine.Debug.Log($"{this.gameObject.GetComponent<ProjectileInit>()}");
 			this.gameObject.GetComponent<ProjectileInit>().InvokeMethod("OFFLINE_Init_noAmmoUse", new object[] { senderID, nrOfProj, dmgM, randomSeed });
 		}
 
