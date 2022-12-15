@@ -8,11 +8,13 @@ namespace GunChargePatch.Extensions
         public float maxCharge = 1f;
         public float chargeTime = 1f;
         public bool useDefaultChargingMethod = true;
+        public int attacksAtFullCharge = 1;
         public GunAdditionalData()
         {
             maxCharge = 1f;
             chargeTime = 1f;
             useDefaultChargingMethod = true;
+            attacksAtFullCharge = 1;
         }
     }
 
@@ -33,6 +35,7 @@ namespace GunChargePatch.Extensions
             __instance.GetAdditionalData().maxCharge = 1f;
             __instance.GetAdditionalData().chargeTime = 1f;
             __instance.GetAdditionalData().useDefaultChargingMethod = true;
+            __instance.GetAdditionalData().attacksAtFullCharge = 1;
         }
     }
 }

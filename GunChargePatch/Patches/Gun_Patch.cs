@@ -7,6 +7,7 @@ using System.Reflection.Emit;
 using Photon.Pun;
 using UnityEngine;
 using HarmonyLib;
+using GunChargePatch.Extensions;
 
 namespace GunChargePatch.Patches
 {
@@ -78,6 +79,17 @@ namespace GunChargePatch.Patches
             if (__instance.useCharge)
             {
                 __result = 0.1f;
+            }
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch("DoAttacks")]
+        [HarmonyPriority(Priority.LowerThanNormal)]
+        static void SetAttacks(Gun __instance, float charge, ref int attacks)
+        {
+            if (__instance.useCharge)
+            {
+                attacks = Mathf.Clamp(Mathf.RoundToInt(charge * __instance.GetAdditionalData().attacksAtFullCharge), 1, 10);
             }
         }
     }
