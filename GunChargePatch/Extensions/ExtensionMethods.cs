@@ -13,7 +13,7 @@ public static class ExtensionMethods
         do
         {
             methodInfo = type.GetMethod(methodName,
-                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly);
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.Default | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly);
             type = type.BaseType;
         }
         while (methodInfo == null && type != null);
@@ -36,7 +36,7 @@ public static class ExtensionMethods
         do
         {
             methodInfo = type.GetMethod(methodName,
-                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly,
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.Default | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly,
                 null,
                 parameters,
                 null);
