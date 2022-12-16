@@ -10,9 +10,14 @@ namespace GunChargePatch.Extensions
     public static class ProjectileHitExtensions
     {
         private static readonly ConditionalWeakTable<ProjectileHit, ProjectileHitAdditionalData> additionalData = new ConditionalWeakTable<ProjectileHit, ProjectileHitAdditionalData>();
-        public static ProjectileHitAdditionalData GetAdditionalData(this ProjectileHit instance)
+        internal static ProjectileHitAdditionalData GetAdditionalData(this ProjectileHit instance)
         {
             return additionalData.GetOrCreateValue(instance);
+        }
+
+        public static float GetBulletCharge(this ProjectileHit instance)
+        {
+            return instance.GetAdditionalData().charge;
         }
     }
 }

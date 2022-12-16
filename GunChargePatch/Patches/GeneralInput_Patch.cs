@@ -6,6 +6,7 @@ using System.Reflection.Emit;
 using Photon.Pun;
 using UnityEngine;
 using HarmonyLib;
+using GunChargePatch.Extensions.Copied;
 
 namespace GunChargePatch.Patches
 {

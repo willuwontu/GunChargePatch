@@ -3,10 +3,11 @@ using HarmonyLib;
 using UnityEngine;
 using Photon.Pun;
 using GunChargePatch.Extensions;
+using GunChargePatch.Extensions.Copied;
 
 namespace GunChargePatch
 {
-	[BepInDependency("pykess.rounds.plugins.moddingutils", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("pykess.rounds.plugins.moddingutils", BepInDependency.DependencyFlags.SoftDependency)]
 	[BepInDependency("io.olavim.rounds.rwf", BepInDependency.DependencyFlags.SoftDependency)]
 	// Declares our mod to Bepin
 	[BepInPlugin(ModId, ModName, Version)]
