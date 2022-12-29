@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace GunChargePatch.Extensions
 {
-    public class ProjectileHitAdditionalData
+    internal class ProjectileHitAdditionalData
     {
         public float charge = 0f;
     }

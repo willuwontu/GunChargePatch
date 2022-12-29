@@ -17,7 +17,7 @@ namespace GunChargePatch
     {
         private const string ModId = "com.rounds.willuwontu.gunchargepatch";
         private const string ModName = "GunChargePatch";
-        public const string Version = "0.0.0"; // What version are we on (major.minor.patch)?
+        public const string Version = "0.0.3"; // What version are we on (major.minor.patch)?
 
         public static GunChargePatch instance { get; private set; }
 
@@ -28,17 +28,31 @@ namespace GunChargePatch
             // Use this to call any harmony patch files your mod may have
             var harmony = new Harmony(ModId);
             harmony.PatchAll();
-			GameObject bullet = Resources.Load<GameObject>("Bullet_Base");
-			bullet.AddComponent<ChargedProjectileInit>();
-		}
+
+			//foreach (GameObject obj in Resources.LoadAll<GameObject>(""))
+			//{
+			//	if (obj.GetComponent<ProjectileInit>())
+			//	{
+			//		if (!obj.GetComponent<ChargedProjectileInit>())
+			//		{
+   //                     obj.AddComponent<ChargedProjectileInit>();
+   //                 }
+   //             }
+			//}
+        }
         void Start()
         {
-			GameObject bullet = Resources.Load<GameObject>("Bullet_Base");
-			if (!bullet.GetComponent<ChargedProjectileInit>())
+            foreach (GameObject obj in Resources.LoadAll<GameObject>(""))
             {
-				bullet.AddComponent<ChargedProjectileInit>();
-			}
-		}
+                if (obj.GetComponent<ProjectileInit>())
+                {
+                    if (!obj.GetComponent<ChargedProjectileInit>())
+                    {
+                        obj.AddComponent<ChargedProjectileInit>();
+                    }
+                }
+            }
+        }
     }
 
 	public class ChargedProjectileInit : MonoBehaviour
@@ -151,6 +165,12 @@ namespace GunChargePatch
 			//UnityEngine.Debug.Log($"{this.gameObject.GetComponent<ProjectileInit>()}");
 			this.gameObject.GetComponent<ProjectileInit>().InvokeMethod("OFFLINE_Init_noAmmoUse", new object[] { senderID, nrOfProj, dmgM, randomSeed });
 		}
+
+		[PunRPC]
+		public void RPCA_SetBulletCharge(float charge)
+		{
+            this.gameObject.GetComponent<ProjectileHit>().GetAdditionalData().charge = charge;
+        }
 
 		private Gun[] guns;
 	}

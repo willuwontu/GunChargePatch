@@ -8,12 +8,22 @@ To use, simply set `gun.Charge = true;` in your card's `SetupCard`.
 <summary>Change log</summary>
 
 ----
+### v0.0.3
+- GunChargePatch will now search for modded prefab bullets when a card is picked.
+
+----
+### v0.0.2
+- Patches an issue with not properly recognizing other bullet types.
+
+----
+### v0.0.0
+- Added the ability to RPC a bullet charge to bullets.
+
+----
 ### v0.0.0
 - Initial Release
 
 </details>
-
-
 
 <details>
 <summary>Gun Fields</summary>

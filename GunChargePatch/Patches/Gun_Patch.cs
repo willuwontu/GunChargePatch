@@ -20,7 +20,7 @@ namespace GunChargePatch.Patches
         {
             __instance.chargeDamageMultiplier = 1f;
             __instance.chargeEvenSpreadTo = 0f;
-            __instance.chargeRecoilTo = 0f;
+            __instance.chargeRecoilTo = 1f;
             __instance.chargeSpeedTo = 1f;
             __instance.chargeSpreadTo = 0f;
         }
@@ -33,9 +33,43 @@ namespace GunChargePatch.Patches
         {
             __instance.chargeDamageMultiplier = 1f;
             __instance.chargeEvenSpreadTo = 0f;
-            __instance.chargeRecoilTo = 0f;
+            __instance.chargeRecoilTo = 1f;
             __instance.chargeSpeedTo = 1f;
             __instance.chargeSpreadTo = 0f;
+        }
+    }
+
+    [HarmonyPatch(typeof(ApplyCardStats))]
+    class ApplyCardStatsPatchAdjustments
+    {
+        [HarmonyPostfix]
+        [HarmonyPatch("CopyGunStats")]
+        private static void SetOnReset(ApplyCardStats __instance, Gun copyFromGun, Gun copyToGun)
+        {
+            copyToGun.chargeRecoilTo -= copyFromGun.chargeRecoilTo;
+            copyToGun.chargeRecoilTo *= copyFromGun.chargeRecoilTo;
+        }
+    }
+
+    [HarmonyPatch(typeof(ApplyCardStats))]
+    class CheckBulletsAfterGettingCards
+    {
+        [HarmonyPostfix]
+        [HarmonyPatch("ApplyStats")]
+        private static void SetOnReset(ApplyCardStats __instance)
+        {
+            var allBullets = (ProjectileInit[])Resources.FindObjectsOfTypeAll<ProjectileInit>();
+            foreach (var bullet in allBullets) 
+            {
+                var obj = bullet.gameObject;
+                if (obj.GetComponent<ProjectileInit>())
+                {
+                    if (!obj.GetComponent<ChargedProjectileInit>())
+                    {
+                        obj.AddComponent<ChargedProjectileInit>();
+                    }
+                }
+            }
         }
     }
 
